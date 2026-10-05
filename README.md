@@ -10,7 +10,7 @@ Uploads a whole folder of pictures to your F-list character for you. Instead of 
 
 ## ⬇️ Download
 
-**[Click here to download the latest version (flist-uploader.zip)](https://github.com/snowstarcaller/f-list-image-uploader/releases/latest/download/flist-uploader.zip)**
+**[Click here to download the latest version (flist-uploader.zip)](https://github.com/snowstarcaller/f-list-image-uploader/raw/main/flist-uploader.zip)**
 
 The download starts straight away. It saves a file called **flist-uploader.zip**, usually into your Downloads folder.
 
