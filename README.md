@@ -71,8 +71,8 @@ Double-click **`Start (Windows).bat`**.
 1. A small window called **F-list Image Uploader** appears.
 2. Click **Browse...** and choose the folder that has your pictures in it.
 3. Choose how many to upload:
-   - **Upload all of them**, or
-   - **Upload only the first [number]** pictures, and type a number.
+   - **Upload only the first [number]** pictures. This is picked for you and set to **50**, which is F-list's normal limit. Change the number if you want fewer.
+   - **Upload all of them, no limit**. Pick this if you're an F-list subscriber and your character can have more than 50 pictures.
 4. Click **Go**.
 5. A browser window opens on F-list. In that browser window:
    - **Log in** to F-list. (Only needed the first time; it remembers you after that.)
@@ -92,7 +92,7 @@ That's it! 🎉
   - **PNG, JPG or GIF** files
   - **under 2 MB** in size
   - **under 4000 pixels** wide and tall
-- **50 picture limit:** F-list allows 50 images per character. If your character already has some, the uploader warns you, and it stops on its own if two uploads in a row fail (that usually means the limit was reached).
+- **Picture limit:** F-list normally allows 50 images per character, so the uploader stops at 50 unless you choose otherwise. Subscribers can have more: pick **Upload all of them, no limit**, or type a bigger number. If your character already has some pictures, lower the number to match. Either way, it stops on its own if two uploads in a row fail (that usually means the limit was reached).
 
 ---
 
@@ -137,5 +137,7 @@ There's also a command-line mode:
 pip install playwright pillow
 python flist_uploader.py "C:\path\to\pictures" --count 20
 ```
+
+`--count` defaults to 50; use `--all` for no limit.
 
 Run `python flist_uploader.py --help` for all options. The Start files simply create a `.venv`, install `playwright` and `pillow` into it, and launch the window.

@@ -25,7 +25,7 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 # F-list's rules, from the Images section of the character edit page.
 # ---------------------------------------------------------------------------
-MAX_IMAGES = 50                 # "Images (Limit: 50)"
+DEFAULT_LIMIT = 50              # "Images (Limit: 50)"; subscribers can have more
 MAX_BYTES = 2_000_000           # "less than 2.0MB"
 MAX_PIXELS = 4000               # "smaller than 4000 px in width and/or height"
 ALLOWED_EXTS = {".png", ".jpg", ".jpeg", ".gif"}
@@ -78,8 +78,9 @@ def scan_folder(folder, limit=None):
             skipped.append((p, reason))
         else:
             good.append(p)
-    cap = MAX_IMAGES if limit is None else max(0, min(limit, MAX_IMAGES))
-    return good[:cap], skipped
+    if limit is None:
+        return good, skipped
+    return good[:max(0, limit)], skipped
 
 
 # ---------------------------------------------------------------------------
@@ -266,7 +267,7 @@ def run_upload(files, log, wait_for_user, stop_event, start_url=START_URL, brows
                     consecutive_failures += 1
                     if consecutive_failures >= 2:
                         log("Two uploads in a row failed, stopping so nothing gets stuck. "
-                            "You may have hit the 50-image limit.")
+                            "You may have hit your character's image limit.")
                         break
                 if i < len(files):
                     time.sleep(PAUSE_BETWEEN_UPLOADS)
@@ -358,8 +359,8 @@ def run_gui():
     root.geometry("640x520")
 
     folder_var = tk.StringVar()
-    mode_var = tk.StringVar(value="all")
-    count_var = tk.IntVar(value=MAX_IMAGES)
+    mode_var = tk.StringVar(value="some")
+    count_var = tk.IntVar(value=DEFAULT_LIMIT)
     summary_var = tk.StringVar(value="Choose a folder of pictures to start.")
     prompt_var = tk.StringVar()
 
@@ -384,13 +385,13 @@ def run_gui():
 
     row = tk.Frame(root)
     row.pack(fill="x", **pad)
-    tk.Radiobutton(row, text=f"Upload all of them (up to {MAX_IMAGES})", variable=mode_var,
+    tk.Radiobutton(row, text="Upload all of them, no limit (F-list subscribers can have more than 50)", variable=mode_var,
                    value="all", command=lambda: refresh_summary()).pack(anchor="w")
     sub = tk.Frame(row)
     sub.pack(anchor="w")
     tk.Radiobutton(sub, text="Upload only the first", variable=mode_var,
                    value="some", command=lambda: refresh_summary()).pack(side="left")
-    tk.Spinbox(sub, from_=1, to=MAX_IMAGES, width=5, textvariable=count_var,
+    tk.Spinbox(sub, from_=1, to=9999, width=5, textvariable=count_var,
                command=lambda: refresh_summary()).pack(side="left")
     tk.Label(sub, text="pictures").pack(side="left")
 
@@ -424,7 +425,7 @@ def run_gui():
         try:
             return int(count_var.get())
         except (tk.TclError, ValueError):
-            return MAX_IMAGES
+            return DEFAULT_LIMIT
 
     def refresh_summary():
         folder = Path(folder_var.get())
@@ -514,7 +515,7 @@ def run_gui():
 # Command-line version
 # ---------------------------------------------------------------------------
 def run_cli(args):
-    files, skipped = scan_folder(args.folder, args.count)
+    files, skipped = scan_folder(args.folder, None if args.all else args.count)
     for p, reason in skipped:
         print(f"Skipping {p.name}: {reason}")
     if not files:
@@ -534,7 +535,9 @@ def run_cli(args):
 def main():
     parser = argparse.ArgumentParser(description="Upload a folder of pictures to an F-list character.")
     parser.add_argument("folder", nargs="?", help="folder of pictures (omit to open the window)")
-    parser.add_argument("--count", type=int, help=f"only upload the first N pictures (max {MAX_IMAGES})")
+    parser.add_argument("--count", type=int, default=DEFAULT_LIMIT,
+                        help=f"only upload the first N pictures (default {DEFAULT_LIMIT})")
+    parser.add_argument("--all", action="store_true", help="upload every picture, no limit")
     parser.add_argument("--url", default=START_URL, help="page to open first")
     args = parser.parse_args()
     if args.folder:

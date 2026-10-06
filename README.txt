@@ -29,7 +29,9 @@ USING IT
      (Right-click is only needed the first time.)
 2. In the small window that appears:
    - Click Browse... and pick the folder with your pictures.
-   - Choose "Upload all of them" or "Upload only the first [N] pictures".
+   - "Upload only the first [N] pictures" is picked, set to 50 (F-list's
+     normal limit). Subscribers with more room can choose "Upload all of
+     them, no limit" or type a bigger number.
    - Click Go.
 3. A browser window opens on F-list. In it:
    - Log in (only needed the first time, it remembers you after that).
@@ -52,9 +54,10 @@ GOOD TO KNOW
     * only png, jpg and gif
     * under 2.0 MB
     * under 4000 pixels wide and tall
-- F-list allows 50 images per character. If your character already has
-  some, the uploader warns you, and it stops by itself if two uploads in a
-  row fail (which is usually the limit being reached).
+- F-list normally allows 50 images per character (subscribers get more).
+  If your character already has some, lower the number to match. The
+  uploader stops by itself if two uploads in a row fail (which is usually
+  the limit being reached).
 - If your character page might need a Save after adding images, click it
   in the browser before closing.
 
